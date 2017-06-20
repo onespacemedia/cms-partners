@@ -1,12 +1,9 @@
 from cms.apps.media.models import ImageRefField
-from cms.models import OnlineBase
+from cms.models import PageBase
 from django.db import models
 
 
-class Partner(OnlineBase):
-    title = models.CharField(
-        max_length=200
-    )
+class Partner(PageBase):
 
     summary = models.TextField(
         max_length=140,
@@ -29,5 +26,5 @@ class Partner(OnlineBase):
     class Meta:
         ordering = ['order']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title

@@ -1,98 +1,11 @@
 {% extends "base.html" %}
-{% load pagination static thumbnail %}
 
-{% block content_above %}
-  {% thumbnail pages.current.content.image.file '1500' as image %}
-    <div class="pg-Strip" style="background-image: url({{ image.url }});">
-    {% empty %}
-    <div class="pg-Strip">
-  {% endthumbnail %}
-<div class="pg-Strip_Inner">
-  <div class="pg-Strip_Content">
-    <p class="pg-Strip_Page">{{ pages.current.title }}</p>
-    <h1 class="pg-Strip_Title">{{ pages.current.content.page_title }}</h1>
-  </div>
-</div>
-</div>
-{% endblock %}
-
-{% block content_inner %}
-  <filter type="partners" base-url="{{ pages.current.get_absolute_url }}" active="{% if filter_active %}{{ filter_active }}{% endif %}" total="{{ filter_total }}" count="{{ filter_count }}">
-    <form class="ftr-Items frm-Outer" slot="form">
-      <select class="ftr-Item frm-Select">
-        <option value="0">By type</option>
-        {% for type in filter_types %}
-          <option value="{{ type.pk }}"
-              {% if filter_active_type == type.pk %} selected="selected"{% endif %}>{{ type.title }}</option>
-        {% endfor %}
-      </select>
-
-      <select class="ftr-Item frm-Select">
-        <option value="0">By programme</option>
-        {% for programme in filter_programmes %}
-          <option value="{{ programme.pk }}"
-              {% if filter_active_programme == programme.pk %} selected="selected"{% endif %}>{{ programme.title }}</option>
-        {% endfor %}
-      </select>
-
-      <select class="ftr-Item frm-Select">
-        <option value="0">By person</option>
-        {% for person in filter_people %}
-          <option value="{{ person.pk }}"
-              {% if filter_active_person == person.pk %} selected="selected"{% endif %}>{{ person.get_full_name }}</option>
-        {% endfor %}
-      </select>
-    </form>
-  </filter>
-
-  <div class="crd-Set">
-    {% for partner in object_list %}
-      <div class="crd-Set_Item">
-        <a class="crd-ImageContainer" href="{{ partner.get_absolute_url }}">
-          {% thumbnail partner.card_logo.file '240' upscale=False as image %}
-            <div class="crd-Image" style="background-image: url({{ image.url }});"></div>
-            {% empty %}
-            <div class="crd-Image" style="background-image: url({% static 'build/img/person-placeholder.png' %});"></div>
-          {% endthumbnail %}
-        </a>
-
-        <div class="crd-Content">
-          <h4 class="crd-Title">{{ partner.title }}</h4>
-          <p class="crd-Text">{{ partner.summary }}</p>
-
-          <footer class="crd-Footer">
-            <a class="crd-Action" href="{{ partner.get_absolute_url }}">View profile</a>
-
-            {% if partner.email %}
-              <a class="crd-Social" href="mailto:{{ partner.email }}" target="_blank">
-                <i class="fa fa-envelope"></i>
-              </a>
-            {% endif %}
-
-            {% if partner.website %}
-              <a class="crd-Social" href="{{ partner.website }}" target="_blank">
-                <i class="fa fa-globe"></i>
-              </a>
-            {% endif %}
-          </footer>
-        </div>
-      </div>
-    {% empty %}
-      <div class="crd-Set_Empty">
-        <h3 class="crd-Set_EmptyTitle">{{ pages.current.content.empty_state_title }}</h3>
-        <p class="crd-Set_EmptyText">{{ pages.current.content.empty_state_text }}</p>
-      </div>
+{% block main %}
+  <ul>
+    {% for partne in partner_list %}
+      <li>{{ partner }}</li>
+    {% else %}
+      <li>No partners</li>
     {% endfor %}
-  </div>
-
-  {% if page_obj %}
-    {% pagination page_obj %}
-  {% endif %}
-
-  {% if pages.current.content.footer_text or pages.current.content.footer_button_text %}
-    <footer class="pg-FooterBlurb">
-      <p class="pg-FooterBlurb_Text">{{ pages.current.content.footer_text }}</p>
-      <a class="pg-FooterBlurb_Action" href="{{ pages.current.content.footer_button_page.get_absolute_url }}">{{ pages.current.content.footer_button_text }}</a>
-    </footer>
-  {% endif %}
-{% endblock content %}
+  </ul>
+{% endblock %}
