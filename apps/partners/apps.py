@@ -4,7 +4,7 @@ from watson import search as watson
 
 
 class PartnersConfig(AppConfig):
-    name = 'partners'
+    name = '{{ project_name }}.apps.partners'
 
     def ready(self):
         Partner = self.get_model('Partner')
